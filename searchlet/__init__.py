@@ -3,4 +3,10 @@
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
-from .Environment import Action, ReverseAction, Environment, WeightedEnvironment  # noqa: F401
+import pytest
+
+from .Environment import Action, ReverseAction, State, Environment, WeightedEnvironment  # noqa: F401
+
+
+def test():
+    pytest.main()

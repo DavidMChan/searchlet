@@ -19,5 +19,10 @@ setup(
     install_requires=[
         'pytest >= 3.7.0',
     ],
-    packages=find_packages(exclude='')  # exclude=('tests', 'docs')
+    packages=find_packages(exclude=''),  # exclude=('tests', 'docs')
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+    ],
 )

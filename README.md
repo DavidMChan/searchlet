@@ -1,2 +1,3 @@
-# searchlet
-Python Search Problem Library
+# Searchlet
+
+Library for solving simple search problems. Licensed under MIT license.

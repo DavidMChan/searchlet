@@ -45,11 +45,20 @@ class AStar(WeightedSearchAlgorithm):
         # Add the start state to the queue
         open_list.push((start, 0), 0 + h_function(start, goal))
 
+        # Counting
+        nodes_expanded = 0
+        nodes_generated = 0
+        if 'count' in kwargs and kwargs['count']:
+            count = True
+        else:
+            count = False
+
         # Main Loop
         while not open_list.empty():
 
             # Pop the lowest f-cost element from the queue
             f_cost, (current_state, g_cost) = open_list.pop()
+            nodes_expanded += 1
 
             # Check to see if this is the goal
             if current_state == goal:
@@ -59,7 +68,10 @@ class AStar(WeightedSearchAlgorithm):
             # If this is not the goal, expand the neighbor nodes
             for action in environment.get_actions(current_state):
                 # Get the next state
-                next_state = environment.apply_action(action, current_state)[0]
+                try:
+                    next_state = environment.apply_action(action, current_state)[0]
+                except RuntimeError:
+                    continue
                 
                 # Get the cost of the next state
                 cost = environment.get_cost(action, current_state)
@@ -70,6 +82,7 @@ class AStar(WeightedSearchAlgorithm):
                 if next_state not in closed_list or closed_list[next_state] > new_f_cost:
                     # Add it to the priority queue and parent map
                     # the priority queue implementation will not update unless it has to
+                    nodes_generated += 1
                     return_value = open_list.push((next_state, g_cost + cost), priority=new_f_cost)
                     if return_value == PriorityQueue.NONEXIST or return_value == PriorityQueue.EXISTS_UPDATED:
                         # Only add to the parent map if our way is better
@@ -88,6 +101,12 @@ class AStar(WeightedSearchAlgorithm):
                 total_cost += cost
                 state_action_pairs.append((current_state, action))
             
-            return (list(reversed(state_action_pairs)), total_cost)
+            if count:
+                return (list(reversed(state_action_pairs)), total_cost), nodes_expanded, nodes_generated
+            else:
+                return (list(reversed(state_action_pairs)), total_cost)
         
-        return (None, -1)
+        if count:
+            return (None, -1), nodes_expanded, nodes_generated
+        else:
+            return (None, -1)

@@ -21,8 +21,12 @@ def generate_random_rollout(env: Environment, state: State, depth: int) -> List[
     states = []
     states.append(state)
     for _ in range(depth):
-        action = random.choice(env.get_actions(state))
-        state = env.apply_action(action, state)[0]
-        states.append(state)
+        possible_actions = env.get_actions(state)
+        if len(possible_actions) > 0:
+            action = random.choice(possible_actions)
+            state = env.apply_action(action, state)[0]
+            states.append(state)
+        else:
+            break
  
     return states
